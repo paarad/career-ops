@@ -107,10 +107,28 @@ function tagText(block, tag) {
   return decodeEntities(cdata ? cdata[1] : m[1]);
 }
 
-const plainText = (html) => decodeEntities(html.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, ''))
-  .replace(/[ \t]+/g, ' ')
-  .replace(/\s*\n\s*/g, '\n')
-  .trim();
+// Tags dropped in one pass over the characters (a <br> becomes a line break),
+// then entities decoded and any angle bracket they produce dropped too, so no
+// markup survives into the description, however the tags nest.
+function plainText(html) {
+  let text = '';
+  let tag = null;
+  for (const char of html) {
+    if (tag !== null) {
+      if (char !== '>') tag += char;
+      else {
+        text += /^br\b/i.test(tag) ? '\n' : '';
+        tag = null;
+      }
+    } else if (char === '<') tag = '';
+    else text += char;
+  }
+  return decodeEntities(text)
+    .replace(/[<>]/g, '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\s*\n\s*/g, '\n')
+    .trim();
+}
 
 // One labelled field of the description block: `<b>Zona: </b> Lisboa<br>`.
 function descriptionField(html, label) {
