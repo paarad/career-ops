@@ -7,7 +7,7 @@ import { pass, fail, ROOT } from '../helpers.mjs';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { pathToFileURL } from 'url';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 
 console.log('\nProvider — net-empregos');
 
