@@ -2,6 +2,9 @@
 data/applications.md
 data/pipeline.md
 data/scan-history.tsv
+data/dayjob-offers.md
+data/dayjob-scan-history.tsv
+data/dayjob-scan.log
 reports/*.md
 !reports/.gitkeep
 output/*
@@ -18,6 +21,7 @@ jds/*
 # User config and customization (never auto-updated)
 config/profile.yml
 portals.yml
+portals.dayjob.yml
 modes/_profile.md
 .update-dismissed
 .update-lock

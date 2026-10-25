@@ -1,0 +1,79 @@
+# Day job lane: a second scan profile, apart from portals.yml
+# Used by `node scan.mjs` when CAREER_OPS_PORTALS points at your copy of it.
+#
+# What it is for: a bridge job while the main search goes on (restaurant,
+# kitchen, hotel, building site, cleaning). It reads one public feed,
+# Net-Empregos, and never touches portals.yml, so the main title_filter stays
+# exactly as it is. Full guide: docs/DAYJOB_LANE.md.
+#
+# HOW TO USE:
+#   1. Copy this file to portals.dayjob.yml in the project root (gitignored).
+#   2. Run the lane with its own inbox and its own dedup history, so the two
+#      lanes never hide each other's offers:
+#
+#        CAREER_OPS_PORTALS=portals.dayjob.yml \
+#        CAREER_OPS_PIPELINE=data/dayjob-offers.md \
+#        CAREER_OPS_SCAN_HISTORY=data/dayjob-scan-history.tsv \
+#        node scan.mjs
+#
+#      Each fitting offer becomes one line of data/dayjob-offers.md:
+#        - [ ] <link> | <company> | <title> | <zone> | posted: <YYYY-MM-DD>
+#
+# OFF SWITCH: the day you sign a contract, set `enabled: false` on the
+# Net-Empregos entry below. The scan then reads nothing and writes nothing,
+# and a scheduled run stays harmless until you remove it.
+
+job_boards:
+  # ── Net-Empregos (Portugal) ─────────────────────────────────────────
+  # Public RSS of the ~1000 newest offers nationwide (ttl 5 minutes).
+  # robots.txt allows it; the site's terms allow use for one person's active
+  # job search and forbid commercial use. No login, never applies.
+  #
+  # Kept when the zone is one of `zones` AND (the category contains one of
+  # `categories` OR the title contains one of `keywords`). Case, accents and
+  # "(a)" / "/a" endings are ignored. Leave a list out to use the provider's
+  # default (these same values); `zones: []` keeps every zone.
+  - name: Net-Empregos Lisboa
+    provider: net-empregos
+    enabled: true
+    zones:
+      - Lisboa
+    categories:
+      - Restauração
+      - Hotelaria / Turismo
+      - Construção Civil
+      - Limpezas
+    keywords:
+      - copeiro
+      - copeira
+      - cozinha
+      - ajudante de cozinha
+      - servente
+      - empregado de mesa
+      - empregada de mesa
+      - empregado de balcão
+      - empregada de balcão
+      - rececionista
+      - recepcionista
+      - limpeza
+
+# The category lists are broad (Construção Civil also posts engineers), so the
+# title filter drops roles that need a trade or a degree. Substring match,
+# case-insensitive, accents NOT folded: list both spellings when they differ.
+title_filter:
+  positive: []
+  negative:
+    - engenheir
+    - arquitet
+    - chefe
+    - diretor
+    - director
+    - gestor
+    - coordenador
+    - supervis
+    - encarregad
+    - responsável
+    - responsavel
+    - projetista
+    - preparador de obra
+    - canalizador
