@@ -28,6 +28,10 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
+          # Fork guard: outside career-ops-hq, skip the two upstream test files
+          # whose alerts a fork cannot fix without diverging from upstream.
+          config: >-
+            ${{ github.repository != 'career-ops-hq/career-ops' && 'paths-ignore: [tests/helpers.mjs, tests/cli-flag-validation.test.mjs]' || '' }}
 
       - name: Setup Go
         if: matrix.language == 'go'

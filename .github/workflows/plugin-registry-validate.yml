@@ -21,6 +21,8 @@ concurrency:
 jobs:
   validate:
     name: Validate registry entries
+    # Fork guard: an upstream-only gate that cannot pass on a fork (one plugin per PR, and a fork imports the registry whole).
+    if: github.repository == 'career-ops-hq/career-ops'
     runs-on: ubuntu-latest
     steps:
       # fetch-depth: 0 so the "One plugin per PR" diff below has the base

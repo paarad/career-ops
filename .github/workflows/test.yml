@@ -66,6 +66,8 @@ jobs:
           if-no-files-found: ignore
   upgrade-gate:
     name: Upgrade regression gate
+    # Fork guard: an upstream-only gate that cannot pass on a fork (it needs upstream release tags in the history, which a fork updated by file copy never has).
+    if: github.repository == 'career-ops-hq/career-ops'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

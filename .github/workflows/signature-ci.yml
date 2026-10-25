@@ -19,6 +19,8 @@ concurrency:
 
 jobs:
   validate:
+    # Fork guard: an upstream-only gate that cannot pass on a fork (the guestbook takes one signature line per PR, and a fork imports SIGNATURES.md whole).
+    if: github.repository == 'career-ops-hq/career-ops'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
